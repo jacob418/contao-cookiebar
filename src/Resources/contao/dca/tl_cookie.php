@@ -115,6 +115,7 @@ $GLOBALS['TL_DCA']['tl_cookie'] = array
         'script'                      => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;sourceUrl,sourceLoadingMode,sourceUrlParameter;scriptConfirmed,scriptUnconfirmed,scriptPosition;{description_legend:hide},description,detailDescription;published;',
         'template'                    => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{template_legend},scriptTemplate,scriptPosition;{description_legend:hide},description,detailDescription;published;',
         'googleAnalytics'             => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{google_analytics_legend},vendorId,scriptConfig;{description_legend:hide},description,detailDescription;published;',
+        'googleConsentMode'           => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{google_consent_mode_legend},globalConfig,gcmMode,scriptConfirmed,scriptUnconfirmed;{description_legend:hide},description,detailDescription;published;',
         'facebookPixel'               => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{facebook_pixel_legend},vendorId;{description_legend:hide},description,detailDescription;published;',
         'matomo'                      => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{matomo_legend},vendorId,vendorUrl,scriptConfig;{description_legend:hide},description,detailDescription;published;',
         'iframe'                      => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{iframe_legend},iframeType,blockTemplate,blockDescription;{description_legend:hide},description,detailDescription;published;',
@@ -226,7 +227,7 @@ $GLOBALS['TL_DCA']['tl_cookie'] = array
             'filter'                  => true,
             'default'                 => 'default',
             'inputType'               => 'select',
-            'options'                 => array('default','script','template','googleAnalytics','facebookPixel','matomo','iframe'),
+            'options'                 => array('default','script','template','googleAnalytics','googleConsentMode','facebookPixel','matomo','iframe'),
             'reference'               => &$GLOBALS['TL_LANG']['tl_cookie'],
             'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
             'sql'                     => array('name'=>'type', 'type'=>'string', 'length'=>64, 'default'=>'text')
@@ -398,10 +399,38 @@ $GLOBALS['TL_DCA']['tl_cookie'] = array
             'eval'                    => array('preserveTags'=>true, 'decodeEntities'=>true, 'helpwizard'=>true, 'class'=>'monospace', 'rte'=>'ace|javascript', 'tl_class'=>'clr'),
             'sql'                     => "text NULL",
             'explanation'             => 'cookiebarScriptConfig',
-            'xlabel' => array
+            'xlabel'                  => array
             (
                 array('tl_cookie', 'selectScriptPreset')
             ),
+        ),
+        'globalConfig' => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG']['tl_cookie']['globalConfig'],
+            'exclude'                 => true,
+			'inputType'               => 'select',
+			'foreignKey'              => 'tl_cookie_config.title',
+			'eval'                    => array('mandatory'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50 wizard'),
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy'),
+            'load_callback'           => array
+            (
+                array('tl_cookie', 'loadGlobalConfigField')
+            ),
+            'wizard'                  => array
+            (
+                array('tl_cookie', 'editGlobalConfig')
+            )
+        ),
+        'gcmMode' => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG']['tl_cookie']['gcmDefaults'],
+            'exclude'                 => true,
+            'inputType'               => 'select',
+            'options'                 => array('ad_storage','analytics_storage'),
+            'reference'               => &$GLOBALS['TL_LANG']['tl_cookie'],
+            'eval'                    => array('tl_class'=>'w50 clr'),
+            'sql'                     => "varchar(32) NOT NULL default ''"
         ),
         'disabled' => array
         (
@@ -617,6 +646,43 @@ class tl_cookie extends Contao\Backend
     }
 
     /**
+     * Return the edit global config wizard
+     *
+     * @param Contao\DataContainer $dc
+     *
+     * @return string
+     */
+    public function editGlobalConfig(Contao\DataContainer $dc)
+    {
+        $title = sprintf($GLOBALS['TL_LANG']['tl_cookie']['editGlobalConfig'], $dc->value);
+
+        return ' <a href="contao/main.php?do=cookiebar&amp;table=tl_cookie_config&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . Contao\StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . Contao\StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Contao\Image::getHtml('all.svg', $title) . '</a>';
+    }
+
+    /**
+     * Prepare global config field
+     *
+     * @param $varValue
+     * @param $dc
+     *
+     * @return int
+     *
+     * @deprecated To be removed in 2.0. Provided for backward compatibility.
+     */
+    public function loadGlobalConfigField($varValue, $dc)
+    {
+        $packages = Contao\System::getContainer()->getParameter('kernel.packages');
+
+        if(floatval($packages['contao/core-bundle']) >= 4.9){
+            $GLOBALS['TL_DCA']['tl_cookie']['fields'][ $dc->field ]['eval']['tl_class'] = 'w50';
+            $GLOBALS['TL_DCA']['tl_cookie']['fields'][ $dc->field ]['wizard'] = [];
+            $GLOBALS['TL_DCA']['tl_cookie']['fields'][ $dc->field ]['inputType'] = 'picker';
+        }
+
+        return $varValue;
+    }
+
+    /**
      * Disable locked fields
      *
      * @param $varValue
@@ -657,7 +723,7 @@ class tl_cookie extends Contao\Backend
      */
     public function requireField($varValue, $dc)
     {
-        $disableRequire = ['default', 'script', 'template', 'iframe', 'matomo'];
+        $disableRequire = ['default', 'script', 'template', 'iframe', 'matomo', 'googleConsentMode'];
 
         if(in_array($dc->activeRecord->type, $disableRequire))
         {
