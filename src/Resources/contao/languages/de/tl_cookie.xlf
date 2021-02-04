@@ -17,6 +17,10 @@
         <source>Template</source>
         <target>Template</target>
       </trans-unit>
+      <trans-unit id="tl_cookie.global_config_legend">
+        <source>Global config</source>
+        <target>Globale Konfiguration</target>
+      </trans-unit>
       <trans-unit id="tl_cookie.description_legend">
         <source>Description</source>
         <target>Beschreibung</target>
@@ -250,12 +254,12 @@
         <target>Geben Sie hier die Matomo Server-URL ein.</target>
       </trans-unit>
       <trans-unit id="tl_cookie.scriptConfig.0">
-        <source>Additional configuration</source>
-        <target>Zusätzliche Konfiguration</target>
+        <source>configuration</source>
+        <target>Konfiguration</target>
       </trans-unit>
       <trans-unit id="tl_cookie.scriptConfig.1">
-        <source>Enter further parameters here, which should be taken into account when loading the script.</source>
-        <target>Tragen Sie hier weitere Parameter ein, welche beim laden des Skriptes berücksichtigt werden sollen.</target>
+        <source>Enter further parameters / code here, which should be taken into account when loading the script.</source>
+        <target>Tragen Sie hier weitere Parameter / weiteren Code ein, welche beim laden des Skriptes berücksichtigt werden sollen.</target>
       </trans-unit>
       <trans-unit id="tl_cookie.globalConfig.0">
         <source>Global Config</source>
@@ -493,6 +497,11 @@
       <trans-unit id="tl_cookie.editGlobalConfig">
         <source>Edit Global Configs</source>
         <target>Globale Konfiguration bearbeiten</target>
+      </trans-unit>
+
+      <trans-unit id="tl_cookie.msgGoogleConsentMode">
+        <source>Cookies of the type "Google Consent Mode" can be created multiple times depending on the consent mode.</source>
+        <target>Cookies vom Typ "Google Consent Mode" können abhängig vom Einwilligungsmodus mehrfach angelegt werden.</target>
       </trans-unit>
     </body>
   </file>

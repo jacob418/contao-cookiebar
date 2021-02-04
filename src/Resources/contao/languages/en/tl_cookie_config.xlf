@@ -2,7 +2,7 @@
   <file datatype="php" original="src/Resources/contao/languages/en/tl_cookie_config.php" source-language="en">
     <body>
       <trans-unit id="tl_cookie_config.title_legend">
-        <source>Cookie / Type</source>
+        <source>Configuration / Type</source>
       </trans-unit>
       <trans-unit id="tl_cookie_config.title.0">
         <source>Title</source>
@@ -34,23 +34,11 @@
       <trans-unit id="tl_cookie_config.sourceUrlParameter.1">
         <source>Define the load parameters of the source URL to be used.</source>
       </trans-unit>
-      <trans-unit id="tl_cookie_config.scriptConfirmed.0">
-        <source>Script (confirmed)</source>
-      </trans-unit>
-      <trans-unit id="tl_cookie_config.scriptConfirmed.1">
-        <source>Enter the script here (without enclosing script tag) which is to be output after confirmation of the cookie.</source>
-      </trans-unit>
-      <trans-unit id="tl_cookie_config.scriptUnconfirmed.0">
-        <source>Script (unconfirmed)</source>
-      </trans-unit>
-      <trans-unit id="tl_cookie_config.scriptUnconfirmed.1">
-        <source>Enter the script here (without enclosing script tag) which should be output if this cookie is not confirmed.</source>
-      </trans-unit>
       <trans-unit id="tl_cookie_config.scriptPosition.0">
         <source>Script position</source>
       </trans-unit>
       <trans-unit id="tl_cookie_config.scriptPosition.1">
-        <source>Specify the position where the script (both confirmed and unconfirmed) should be embedded.</source>
+        <source>Specify the position where the script should be embedded.</source>
       </trans-unit>
       <trans-unit id="tl_cookie_config.vendorId.0">
         <source>ID</source>
@@ -65,16 +53,16 @@
         <source>Enter your Container ID here.</source>
       </trans-unit>
       <trans-unit id="tl_cookie_config.scriptConfig.0">
-        <source>Additional configuration</source>
+        <source>Configuration</source>
       </trans-unit>
       <trans-unit id="tl_cookie_config.scriptConfig.1">
-        <source>Enter further parameters here, which should be taken into account when loading the script.</source>
+        <source>Own JavaScript code.</source>
       </trans-unit>
       <trans-unit id="tl_cookie_config.googleConsentMode.0">
         <source>Activate Google Consent Mode</source>
       </trans-unit>
       <trans-unit id="tl_cookie_config.googleConsentMode.1">
-        <source>Enter further parameters here, which should be taken into account when loading the script.</source>
+        <source>Delivers a predefined configuration for Google Consent Mode. This configuration is overwritten if a custom script has been defined in the "Configuration" field.</source>
       </trans-unit>
 
       <trans-unit id="tl_cookie_config.scriptConfig_xlabel">
@@ -85,23 +73,13 @@
         <source>Google Tag Manager</source>
       </trans-unit>
       <trans-unit id="tl_cookie_config.tagManager.1">
-        <source>Integrate Google Tag Manager.</source>
+        <source>Integrate Google Tag Manager / Google Consent Mode.</source>
       </trans-unit>
       <trans-unit id="tl_cookie_config.script.0">
         <source>Custom</source>
       </trans-unit>
       <trans-unit id="tl_cookie_config.script.1">
         <source>Configure custom script.</source>
-      </trans-unit>
-
-      <trans-unit id="tl_cookie_config.confirmed">
-        <source>Only load if cookie was accepted</source>
-      </trans-unit>
-      <trans-unit id="tl_cookie_config.unconfirmed">
-        <source>Only load if cookie was not accepted</source>
-      </trans-unit>
-      <trans-unit id="tl_cookie_config.always">
-        <source>Load always</source>
       </trans-unit>
 
       <trans-unit id="tl_cookie_config.bodyBelowContent">
@@ -112,6 +90,16 @@
       </trans-unit>
       <trans-unit id="tl_cookie_config.head">
         <source>Head tag</source>
+      </trans-unit>
+
+      <trans-unit id="tl_cookie_config.confirmed">
+        <source>Load only if one of the cookies was accepted</source>
+      </trans-unit>
+      <trans-unit id="tl_cookie_config.unconfirmed">
+        <source>Load only if none of the cookies was accepted</source>
+      </trans-unit>
+      <trans-unit id="tl_cookie_config.always">
+        <source>Load always</source>
       </trans-unit>
 
       <trans-unit id="tl_cookie_config.new.0">

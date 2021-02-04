@@ -90,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_cookie_config'] = array
 	'palettes' => array
 	(
 	    '__selector__'                => array('type'),
-        'script'                      => '{title_legend},title,type;sourceUrl,sourceLoadingMode,sourceUrlParameter;scriptConfirmed,scriptUnconfirmed,scriptPosition;',
+        'script'                      => '{title_legend},title,type;sourceUrl,sourceLoadingMode,sourceUrlParameter;scriptConfig,scriptPosition,scriptLoadingMode;',
         'tagManager'                  => '{title_legend},title,type;vendorId,googleConsentMode,scriptConfig;'
 	),
 
@@ -144,7 +144,7 @@ $GLOBALS['TL_DCA']['tl_cookie_config'] = array
             'label'                   => &$GLOBALS['TL_LANG']['tl_cookie_config']['sourceUrl'],
             'exclude'                 => true,
             'inputType'               => 'text',
-            'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'addWizardClass'=>false, 'tl_class'=>'w50'),
+            'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>'js'), 'addWizardClass'=>false, 'tl_class'=>'w50'),
             'sql'                     => "varchar(255) NOT NULL default ''"
         ),
         'sourceLoadingMode' => array
@@ -167,24 +167,8 @@ $GLOBALS['TL_DCA']['tl_cookie_config'] = array
             'exclude'                 => true,
             'inputType'               => 'checkbox',
             'options'                 => array('async', 'defer'),
-            'eval'                    => array('multiple'=>true, 'tl_class'=>'w50'),
+            'eval'                    => array('multiple'=>true, 'tl_class'=>'w50 clr'),
             'sql'                     => "varchar(255) NOT NULL default ''"
-        ),
-        'scriptConfirmed' => array
-        (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_cookie_config']['scriptConfirmed'],
-            'exclude'                 => true,
-            'inputType'               => 'textarea',
-            'eval'                    => array('preserveTags'=>true, 'decodeEntities'=>true, 'class'=>'monospace', 'rte'=>'ace|javascript', 'tl_class'=>'clr'),
-            'sql'                     => "text NULL"
-        ),
-        'scriptUnconfirmed' => array
-        (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_cookie_config']['scriptUnconfirmed'],
-            'exclude'                 => true,
-            'inputType'               => 'textarea',
-            'eval'                    => array('preserveTags'=>true, 'decodeEntities'=>true, 'class'=>'monospace', 'rte'=>'ace|javascript', 'tl_class'=>'clr'),
-            'sql'                     => "text NULL"
         ),
 		'scriptPosition' => array
         (
@@ -199,6 +183,20 @@ $GLOBALS['TL_DCA']['tl_cookie_config'] = array
             'reference'               => &$GLOBALS['TL_LANG']['tl_cookie_config'],
             'eval'                    => array('tl_class'=>'w50'),
             'sql'                     => "varchar(32) NOT NULL default ''"
+        ),
+        'scriptLoadingMode' => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG']['tl_cookie_config']['scriptLoadingMode'],
+            'exclude'                 => true,
+            'inputType'               => 'select',
+            'options'                 => array(
+                1 => 'confirmed',
+                2 => 'unconfirmed',
+                3 => 'always'
+            ),
+            'reference'               => &$GLOBALS['TL_LANG']['tl_cookie_config'],
+            'eval'                    => array('tl_class'=>'w50'),
+            'sql'                     => "char(1) NOT NULL default ''"
         ),
         'scriptConfig' => array
         (
@@ -219,7 +217,7 @@ $GLOBALS['TL_DCA']['tl_cookie_config'] = array
             'exclude'                 => true,
             'filter'                  => true,
             'inputType'               => 'checkbox',
-            'eval'                    => array('tl_class'=>'w50 m12'),
+            'eval'                    => array('tl_class'=>'w50 m12', 'submitOnChange'=>true),
             'sql'                     => "char(1) NOT NULL default ''"
         ),
         'published' => array

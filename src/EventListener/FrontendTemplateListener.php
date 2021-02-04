@@ -56,7 +56,7 @@ class FrontendTemplateListener
             }
 
             // Add cookiebar script initialization
-            $strHtml .= sprintf("<script>var cookiebar = new ContaoCookiebar({configId:%s,pageId:%s,version:%s,token:'%s',doNotTrack:%s,currentPageId:%s,excludedPageIds:%s,cookies:%s,texts:{acceptAndDisplay:'%s'}});</script>",
+            $strHtml .= sprintf("<script>var cookiebar = new ContaoCookiebar({configId:%s,pageId:%s,version:%s,token:'%s',doNotTrack:%s,currentPageId:%s,excludedPageIds:%s,cookies:%s,configs:%s,texts:{acceptAndDisplay:'%s'}});</script>",
                 $objConfig->id,
                 $objConfig->pageId,
                 $objConfig->version,
@@ -65,6 +65,7 @@ class FrontendTemplateListener
                 $objPage->id,
                 json_encode(StringUtil::deserialize($objConfig->excludePages)),
                 json_encode(Cookiebar::validateCookies($objConfig)),
+                json_encode(Cookiebar::validateGlobalConfigs($objConfig)),
                 $GLOBALS['TL_LANG']['tl_cookiebar']['acceptAndDisplayLabel']
             );
 

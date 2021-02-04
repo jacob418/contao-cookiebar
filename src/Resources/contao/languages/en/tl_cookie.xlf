@@ -13,6 +13,9 @@
       <trans-unit id="tl_cookie.template_legend">
         <source>Template</source>
       </trans-unit>
+      <trans-unit id="tl_cookie.global_config_legend">
+        <source>Global config</source>
+      </trans-unit>
       <trans-unit id="tl_cookie.description_legend">
         <source>Description</source>
       </trans-unit>
@@ -194,10 +197,10 @@
         <source>Enter the Matomo Server-URL here.</source>
       </trans-unit>
       <trans-unit id="tl_cookie.scriptConfig.0">
-        <source>Additional configuration</source>
+        <source>Configuration</source>
       </trans-unit>
       <trans-unit id="tl_cookie.scriptConfig.1">
-        <source>Enter further parameters here (as an JavaScript object), which should be taken into account when loading the script.</source>
+        <source>Enter further parameters / code here (as an JavaScript object), which should be taken into account when loading the script.</source>
       </trans-unit>
       <trans-unit id="tl_cookie.globalConfig.0">
         <source>Global Config</source>
@@ -343,6 +346,10 @@
       </trans-unit>
       <trans-unit id="tl_cookie.toggle.1">
         <source>Publish/unpublish cookie ID %s</source>
+      </trans-unit>
+
+      <trans-unit id="tl_cookie.msgGoogleConsentMode">
+        <source>Cookies of the type "Google Consent Mode" can be created multiple times depending on the consent mode.</source>
       </trans-unit>
     </body>
   </file>

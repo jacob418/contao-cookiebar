@@ -10,6 +10,7 @@
 
 namespace Oveleon\ContaoCookiebar;
 
+use Contao\Cache;
 use Contao\Database;
 use Contao\Environment;
 use Contao\FrontendTemplate;
@@ -17,6 +18,7 @@ use Contao\Input;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
+use Oveleon\ContaoCookiebar\DependencyInjection\Configuration;
 use Oveleon\ContaoCookiebar\Exception\NoCookiebarSpecifiedException;
 
 class Cookiebar
@@ -90,6 +92,39 @@ class Cookiebar
                         continue;
                     }
 
+                    if($objCookies->globalConfig)
+                    {
+                        $intConfigKey = $objCookies->globalConfig;
+                        $strConfigKey = 'ccb_global_config';
+                        $arrConfigs   = Cache::get($strConfigKey);
+
+                        if(!Cache::has($strConfigKey) || null === $arrConfigs || !array_key_exists($intConfigKey, $arrConfigs))
+                        {
+                            /** @var CookieConfigModel $objConfigModel */
+                            $objConfigModel = CookieConfigModel::findById($intConfigKey);
+
+                            if(null !== $objConfigModel)
+                            {
+                                $objGlobalConfig = new CookieConfig($objConfigModel);
+                                $objGlobalConfig->addCookie( $objCookies->current() );
+
+                                $arrConfigs[ $intConfigKey ] = $objGlobalConfig;
+
+                                Cache::set($strConfigKey, $arrConfigs);
+                            }
+                        }
+                        else
+                        {
+                            /** @var CookieConfig $objGlobalConfig */
+                            $objGlobalConfig = $arrConfigs[ $intConfigKey ];
+                            $objGlobalConfig->addCookie( $objCookies->current() );
+
+                            $arrConfigs[ $intConfigKey ] = $objGlobalConfig;
+
+                            Cache::set($strConfigKey, $arrConfigs);
+                        }
+                    }
+
                     $arrCookies[] = new CookieHandler($objCookies->current());
                 }
             }
@@ -103,8 +138,15 @@ class Cookiebar
 
         global $objPage;
 
-        $objConfig->groups = $arrGroups;
-        $objConfig->pageId = $objPage->rootId;
+        $objConfig->groups  = $arrGroups;
+        $objConfig->configs = null;
+        $objConfig->pageId  = $objPage->rootId;
+
+        // Add global configuration
+        if(Cache::has('ccb_global_config'))
+        {
+            $objConfig->configs = Cache::get('ccb_global_config');
+        }
 
         // Cache config
         static::$configCache = $objConfig;
@@ -267,6 +309,38 @@ class Cookiebar
 
                 $arrResponse[ $cookie->id ] = $arrCookie;
             }
+        }
+
+        return $arrResponse;
+    }
+
+    /**
+     * Collect global config scripts
+     *
+     * @param object $objConfig
+     *
+     * @return array
+     */
+    public static function validateGlobalConfigs($objConfig): array
+    {
+        $arrResponse = [];
+
+        if(null === $objConfig->configs)
+        {
+            return $arrResponse;
+        }
+
+        foreach ($objConfig->configs as $config)
+        {
+            $arrConfig = [
+                'id'        => $config->id,
+                'type'      => $config->type,
+                'cookies'   => array_combine(array_keys($config->arrCookies), array_keys($config->arrCookies)),
+                'resources' => $config->resources,
+                'scripts'   => $config->scripts
+            ];
+
+            $arrResponse[ $config->id ] = $arrConfig;
         }
 
         return $arrResponse;

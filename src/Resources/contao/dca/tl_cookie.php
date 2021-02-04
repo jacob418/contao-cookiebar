@@ -21,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_cookie'] = array
         'onload_callback' => array
         (
             array('tl_cookie', 'checkPermission'),
-            array('tl_cookie', 'adjustDcaByIdentifier'),
+            array('tl_cookie', 'adjustDcaByIdentifier')
         ),
 		'sql' => array
 		(
@@ -112,10 +112,10 @@ $GLOBALS['TL_DCA']['tl_cookie'] = array
 	(
 	    '__selector__'                => array('type'),
         'default'                     => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{description_legend:hide},description,detailDescription;published,disabled;',
-        'script'                      => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;sourceUrl,sourceLoadingMode,sourceUrlParameter;scriptConfirmed,scriptUnconfirmed,scriptPosition;{description_legend:hide},description,detailDescription;published;',
-        'template'                    => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{template_legend},scriptTemplate,scriptPosition;{description_legend:hide},description,detailDescription;published;',
+        'script'                      => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{global_config_legend:hide},globalConfig;sourceUrl,sourceLoadingMode,sourceUrlParameter;scriptConfirmed,scriptUnconfirmed,scriptPosition;{description_legend:hide},description,detailDescription;published;',
+        'template'                    => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{global_config_legend:hide},globalConfig;{template_legend},scriptTemplate,scriptPosition;{description_legend:hide},description,detailDescription;published;',
         'googleAnalytics'             => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{google_analytics_legend},vendorId,scriptConfig;{description_legend:hide},description,detailDescription;published;',
-        'googleConsentMode'           => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{google_consent_mode_legend},globalConfig,gcmMode,scriptConfirmed,scriptUnconfirmed;{description_legend:hide},description,detailDescription;published;',
+        'googleConsentMode'           => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{google_consent_mode_legend},globalConfig,gcmMode,scriptConfig;{description_legend:hide},description,detailDescription;published;',
         'facebookPixel'               => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{facebook_pixel_legend},vendorId;{description_legend:hide},description,detailDescription;published;',
         'matomo'                      => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{matomo_legend},vendorId,vendorUrl,scriptConfig;{description_legend:hide},description,detailDescription;published;',
         'iframe'                      => '{title_legend},title,type,token,showTokens,expireTime,showExpireTime,provider,showProvider;{iframe_legend},iframeType,blockTemplate,blockDescription;{description_legend:hide},description,detailDescription;published;',
@@ -229,6 +229,9 @@ $GLOBALS['TL_DCA']['tl_cookie'] = array
             'inputType'               => 'select',
             'options'                 => array('default','script','template','googleAnalytics','googleConsentMode','facebookPixel','matomo','iframe'),
             'reference'               => &$GLOBALS['TL_LANG']['tl_cookie'],
+            'load_callback'           => array(
+                array('tl_cookie', 'addTypeMessage'),
+            ),
             'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
             'sql'                     => array('name'=>'type', 'type'=>'string', 'length'=>64, 'default'=>'text')
         ),
@@ -330,7 +333,7 @@ $GLOBALS['TL_DCA']['tl_cookie'] = array
             'exclude'                 => true,
             'search'                  => true,
             'inputType'               => 'text',
-            'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'addWizardClass'=>false, 'tl_class'=>'w50'),
+            'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>'js'), 'addWizardClass'=>false, 'tl_class'=>'w50'),
             'sql'                     => "varchar(255) NOT NULL default ''"
         ),
         'sourceLoadingMode' => array
@@ -410,7 +413,7 @@ $GLOBALS['TL_DCA']['tl_cookie'] = array
             'exclude'                 => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_cookie_config.title',
-			'eval'                    => array('mandatory'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy'),
             'load_callback'           => array
@@ -544,13 +547,31 @@ class tl_cookie extends Contao\Backend
      */
     public function adjustDcaByIdentifier($dc)
     {
-        $objCookie = \Oveleon\ContaoCookiebar\CookieModel::findById($dc->id);
-        $objGroup = \Oveleon\ContaoCookiebar\CookieGroupModel::findById($objCookie->pid);
+        $objCookie = Oveleon\ContaoCookiebar\CookieModel::findById($dc->id);
+        $objGroup = Oveleon\ContaoCookiebar\CookieGroupModel::findById($objCookie->pid);
 
         if($objCookie->identifier === 'lock' || $objGroup->identifier === 'lock')
         {
             $GLOBALS['TL_DCA']['tl_cookie']['palettes']['default'] = str_replace(',type', '', $GLOBALS['TL_DCA']['tl_cookie']['palettes']['default']);
         }
+    }
+
+    /**
+     * Add info messages
+     *
+     * @param $varValue
+     * @param $dc
+     *
+     * @return mixed
+     */
+    public function addTypeMessage($varValue, $dc)
+    {
+        if($varValue === 'googleConsentMode')
+        {
+            Contao\Message::addInfo($GLOBALS['TL_LANG']['tl_cookie']['msgGoogleConsentMode']);
+        }
+
+        return $varValue;
     }
 
     /**
@@ -677,6 +698,11 @@ class tl_cookie extends Contao\Backend
             $GLOBALS['TL_DCA']['tl_cookie']['fields'][ $dc->field ]['eval']['tl_class'] = 'w50';
             $GLOBALS['TL_DCA']['tl_cookie']['fields'][ $dc->field ]['wizard'] = [];
             $GLOBALS['TL_DCA']['tl_cookie']['fields'][ $dc->field ]['inputType'] = 'picker';
+        }
+
+        if($dc->activeRecord->type === 'googleConsentMode')
+        {
+            $GLOBALS['TL_DCA']['tl_cookie']['fields'][ $dc->field ]['eval']['mandatory'] = true;
         }
 
         return $varValue;
