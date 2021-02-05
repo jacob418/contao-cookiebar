@@ -617,7 +617,11 @@ class tl_cookie extends Contao\Backend
     public function selectScriptPreset($dc)
     {
         $id = 'script' . $dc->activeRecord->type;
-        return ' <a href="javascript:;" id="'.$id.'" title="' . $GLOBALS['TL_LANG']['tl_cookie']['scriptConfig_xlabel'] . '" onclick="Backend.getScrollOffset();ace.edit(\'ctrl_' . $dc->field . '_div\').setValue(Cookiebar.getConfig(\''.$dc->activeRecord->type.'\'))">' . Contao\Image::getHtml('theme_import.svg', $GLOBALS['TL_LANG']['tl_cookie']['scriptConfig_xlabel']) . '</a><script>Cookiebar.issetConfig(\''.$dc->activeRecord->type.'\',document.getElementById(\''.$id.'\'));</script>';
+
+        $xlabel  = ' <a href="javascript:;" id="script_'.$id.'" title="' . $GLOBALS['TL_LANG']['tl_cookie']['scriptConfig_xlabel'] . '" onclick="Backend.getScrollOffset();ace.edit(\'ctrl_' . $dc->field . '_div\').setValue(Cookiebar.getConfig(\''.$dc->activeRecord->type.'\'))">' . Contao\Image::getHtml('theme_import.svg', $GLOBALS['TL_LANG']['tl_cookie']['scriptConfig_xlabel']) . '</a><script>Cookiebar.issetConfig(\''.$dc->activeRecord->type.'\',document.getElementById(\'script_'.$id.'\'));</script>';
+        $xlabel .= ' <a href="javascript:;" id="docs_'.$id.'" title="' . $GLOBALS['TL_LANG']['tl_cookie']['scriptDocs_xlabel'] . '" onclick="Backend.getScrollOffset();window.open(Cookiebar.getDocs(\''.$dc->activeRecord->type.'\'), \'_blank\')">' . Contao\Image::getHtml('show.svg', $GLOBALS['TL_LANG']['tl_cookie']['scriptConfig_xlabel']) . '</a><script>Cookiebar.issetDocs(\''.$dc->activeRecord->type.'\',document.getElementById(\'docs_'.$id.'\'));</script>';
+
+        return $xlabel;
     }
 
     /**
@@ -629,7 +633,23 @@ class tl_cookie extends Contao\Backend
      */
     public function listCookieItem($arrRow)
     {
-        return '<div class="tl_content_left">' . $arrRow['title'] . ' <span style="color:#999;padding-left:3px">[' . $GLOBALS['TL_LANG']['tl_cookie'][$arrRow['type']][0] . ($arrRow['vendorId'] ?  ' | <span style="color:#f47c00;">' . $arrRow['vendorId'] . '</span>' : '') . ']</span></div>';
+        $strAddition = '';
+
+        if($arrRow['vendorId'])
+        {
+            $strAddition = $arrRow['vendorId'];
+        }
+        elseif($arrRow['globalConfig'])
+        {
+            $objConfig = Oveleon\ContaoCookiebar\CookieConfigModel::findById($arrRow['globalConfig']);
+
+            if(null !== $objConfig)
+            {
+                $strAddition = $objConfig->title;
+            }
+        }
+
+        return '<div class="tl_content_left">' . $arrRow['title'] . ' <span style="color:#999;padding-left:3px">[' . $GLOBALS['TL_LANG']['tl_cookie'][$arrRow['type']][0] . ($strAddition ?  ' | <span style="color:#f47c00;">' . $strAddition . '</span>' : '') . ']</span></div>';
     }
 
     /**

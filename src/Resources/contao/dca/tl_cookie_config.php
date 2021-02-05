@@ -286,7 +286,17 @@ class tl_cookie_config extends Contao\Backend
      */
     public function selectScriptPreset($dc)
     {
-        $id = 'script' . $dc->activeRecord->type;
-        return ' <a href="javascript:;" id="'.$id.'" title="' . $GLOBALS['TL_LANG']['tl_cookie_config']['scriptConfig_xlabel'] . '" onclick="Backend.getScrollOffset();ace.edit(\'ctrl_' . $dc->field . '_div\').setValue(Cookiebar.getConfig(\''.$dc->activeRecord->type.'\'))">' . Contao\Image::getHtml('theme_import.svg', $GLOBALS['TL_LANG']['tl_cookie']['scriptConfig_xlabel']) . '</a><script>Cookiebar.issetConfig(\''.$dc->activeRecord->type.'\',document.getElementById(\''.$id.'\'));</script>';
+        $key = $dc->activeRecord->type;
+        $id  = 'script' . $dc->activeRecord->type;
+
+        if($dc->activeRecord->googleConsentMode)
+        {
+            $key .= '_gcm';
+        }
+
+        $xlabel  = ' <a href="javascript:;" id="script_'.$id.'" title="' . $GLOBALS['TL_LANG']['tl_cookie']['scriptConfig_xlabel'] . '" onclick="Backend.getScrollOffset();ace.edit(\'ctrl_' . $dc->field . '_div\').setValue(Cookiebar.getConfig(\''.$key.'\'))">' . Contao\Image::getHtml('theme_import.svg', $GLOBALS['TL_LANG']['tl_cookie']['scriptConfig_xlabel']) . '</a><script>Cookiebar.issetConfig(\''.$key.'\',document.getElementById(\'script_'.$id.'\'));</script>';
+        $xlabel .= ' <a href="javascript:;" id="docs_'.$id.'" title="' . $GLOBALS['TL_LANG']['tl_cookie']['scriptDocs_xlabel'] . '" onclick="Backend.getScrollOffset();window.open(Cookiebar.getDocs(\''.$key.'\'), \'_blank\')">' . Contao\Image::getHtml('show.svg', $GLOBALS['TL_LANG']['tl_cookie']['scriptConfig_xlabel']) . '</a><script>Cookiebar.issetDocs(\''.$key.'\',document.getElementById(\'docs_'.$id.'\'));</script>';
+
+        return $xlabel;
     }
 }

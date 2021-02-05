@@ -286,8 +286,12 @@
         <target>Google Analytics ID muss gesetzt sein.</target>
       </trans-unit>
       <trans-unit id="tl_cookie.scriptConfig_xlabel">
-        <source>Insert default configuration</source>
-        <target>Standard-Konfiguration einfügen</target>
+        <source>Insert preset</source>
+        <target>Vorlage einfügen</target>
+      </trans-unit>
+      <trans-unit id="tl_cookie.scriptDocs_xlabel">
+        <source>Open third-party documentation</source>
+        <target>Dokumentation des Drittanbieters öffnen</target>
       </trans-unit>
       <trans-unit id="tl_cookie.disabled.0">
         <source>Prevent deactivation</source>

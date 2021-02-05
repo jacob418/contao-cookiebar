@@ -108,17 +108,25 @@
       </trans-unit>
 
       <trans-unit id="XPL.configurationScriptConfig.1.0">
-        <source>Google Consent Mode</source>
-        <target>Google Consent Mode</target>
+        <source>Google Tag Manager</source>
+        <target>Google Tag Manager</target>
       </trans-unit>
       <trans-unit id="XPL.configurationScriptConfig.1.1">
+        <source>Enables the integration of the Google Tag Manager. Additionally, a custom script can be entered. Please note, these settings are already implemented without confirmation of the cookie bar in the HEAD of the website.</source>
+        <target>Ermöglicht die Einbindung des Google Tag Managers. Zusätzlich kann ein benutzerdefiniertes Skript eingetragen werden. Bitte beachte, dass diese Einstellungen bereits ohne Bestätigung der Cookiebar im Kopfbereich der Website implementiert werden.</target>
+      </trans-unit>
+      <trans-unit id="XPL.configurationScriptConfig.2.0">
+        <source>Tag Manager + Google Consent Mode</source>
+        <target>Tag Manager + Google Consent Mode</target>
+      </trans-unit>
+      <trans-unit id="XPL.configurationScriptConfig.2.1">
         <source>If you do not define your own configuration for Google Consent Mode, the following settings are set automatically: &lt;pre&gt;
 
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
 
           gtag('consent', 'default', {
-          'ad_storage': 'denied'
+          'ad_storage': 'denied',
           'analytics_storage': 'denied',
           'wait_for_update': 500
           });
@@ -134,7 +142,7 @@
           function gtag(){dataLayer.push(arguments);}
 
           gtag('consent', 'default', {
-          'ad_storage': 'denied'
+          'ad_storage': 'denied',
           'analytics_storage': 'denied',
           'wait_for_update': 500
           });

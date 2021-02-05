@@ -64,17 +64,24 @@
           &lt;code class="tl_red"&gt;_paq.push(['trackPageView']);&lt;/code&gt;
           &lt;code class="tl_red"&gt;_paq.push(['enableLinkTracking']);&lt;/code&gt;&lt;pre&gt;</source>
       </trans-unit>
+
       <trans-unit id="XPL.configurationScriptConfig.1.0">
-        <source>Google Consent Mode</source>
+        <source>Google Tag Manager</source>
       </trans-unit>
       <trans-unit id="XPL.configurationScriptConfig.1.1">
+        <source>Enables the integration of the Google Tag Manager. Additionally, a custom script can be entered. Please note, these settings are already implemented without confirmation of the cookie bar in the HEAD of the website.</source>
+      </trans-unit>
+      <trans-unit id="XPL.configurationScriptConfig.2.0">
+        <source>Tag Manager + Google Consent Mode</source>
+      </trans-unit>
+      <trans-unit id="XPL.configurationScriptConfig.2.1">
         <source>If you do not define your own configuration for Google Consent Mode, the following settings are set automatically: &lt;pre&gt;
 
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
 
           gtag('consent', 'default', {
-          'ad_storage': 'denied'
+          'ad_storage': 'denied',
           'analytics_storage': 'denied',
           'wait_for_update': 500
           });
