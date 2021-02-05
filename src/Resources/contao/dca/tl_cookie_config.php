@@ -145,7 +145,10 @@ $GLOBALS['TL_DCA']['tl_cookie_config'] = array
             'exclude'                 => true,
             'inputType'               => 'text',
             'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>'js'), 'addWizardClass'=>false, 'tl_class'=>'w50'),
-            'sql'                     => "varchar(255) NOT NULL default ''"
+            'sql'                     => "varchar(255) NOT NULL default ''",
+            'save_callback'           => array(
+                array('tl_cookie_config', 'addHostPrefix')
+            )
         ),
         'sourceLoadingMode' => array
         (
@@ -275,6 +278,30 @@ class tl_cookie_config extends Contao\Backend
         }
 
         return $varValue;
+    }
+
+    /**
+     * Add host prefix for source URLs from the same origin
+     *
+     * @param $varValue
+     * @param $dc
+     *
+     * @return mixed
+     */
+    public function addHostPrefix($varValue, $dc)
+    {
+        if(
+            (strpos($varValue, 'http') === 0) ||
+            (strpos($varValue, 'https') === 0) ||
+            (strpos($varValue, 'www') === 0) ||
+            (strpos($varValue, '//') === 0) ||
+            (strpos($varValue, '{{') === 0)
+        )
+        {
+            return $varValue;
+        }
+
+        return '{{env::url}}/' . $varValue;
     }
 
     /**
